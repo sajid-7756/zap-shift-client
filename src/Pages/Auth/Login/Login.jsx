@@ -1,22 +1,37 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import useAuth from "../../../Hooks/useAuth";
+import toast from "react-hot-toast";
+import { Link, useLocation, useNavigate } from "react-router";
+import SocialLogin from "../Social login/SocialLogin";
 
 const Login = () => {
+  const { signInUser } = useAuth();
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const handleLogin = (data) => {
-    console.log(data);
+    signInUser(data.email, data.password)
+      .then((res) => {
+        console.log(res);
+        toast.success("Login success");
+        navigate(location?.state || "/");
+      })
+      .catch((err) => toast.error(err.code));
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen">
       <div className="card w-full max-w-md shadow-xl">
         <div className="card-body">
-          <h2 className="card-title text-center text-primary">Login</h2>
+          <h2 className="card-title text-center text-primary text-2xl">
+            Login
+          </h2>
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-4">
             {/* Email */}
             <div>
@@ -36,7 +51,9 @@ const Login = () => {
                 placeholder="you@example.com"
               />
               {errors.email && (
-                <p className="text-error text-sm mt-1">{errors.email.message}</p>
+                <p className="text-error text-sm mt-1">
+                  {errors.email.message}
+                </p>
               )}
             </div>
 
@@ -71,9 +88,22 @@ const Login = () => {
 
             {/* Submit */}
             <div className="form-control mt-6">
-              <button className="btn btn-primary w-full text-black">Login</button>
+              <button className="btn btn-primary w-full text-black">
+                Login
+              </button>
             </div>
+            <p className="text-gray-600">
+              New to zap Shift?
+              <Link
+                state={location?.state}
+                to={"/register"}
+                className="underline"
+              >
+                Register
+              </Link>
+            </p>
           </form>
+          <SocialLogin></SocialLogin>
         </div>
       </div>
     </div>

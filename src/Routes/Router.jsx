@@ -6,7 +6,8 @@ import AuthLayout from "../Layouts/AuthLayout";
 import Login from "../Pages/Auth/Login/Login";
 import Register from "../Pages/Auth/Register/Register";
 import RootLayout from "../Layouts/RootLayout";
-
+import PrivateRoute from "./PrivateRoute";
+import Rider from "../Pages/Rider/Rider";
 
 const router = createBrowserRouter([
   {
@@ -28,21 +29,29 @@ const router = createBrowserRouter([
         path: "/aboutUs",
         Component: AboutUs,
       },
+      {
+        path: "/rider",
+        element: (
+          <PrivateRoute>
+            <Rider></Rider>
+          </PrivateRoute>
+        ),
+      },
     ],
   },
   {
-    path: '/',
+    path: "/",
     Component: AuthLayout,
-  children: [
-    {
-       path: 'login',
-       Component: Login,
-    },
-    {
-      path: 'register',
-      Component: Register,
-    }
-  ]
+    children: [
+      {
+        path: "login",
+        Component: Login,
+      },
+      {
+        path: "register",
+        Component: Register,
+      },
+    ],
   },
 ]);
 
