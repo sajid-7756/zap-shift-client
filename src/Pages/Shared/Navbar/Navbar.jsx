@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router";
-import Logo from "../../../Comoponents/Logo/Logo";
+import Logo from "../../../Components/Logo/Logo";
 import useAuth from "../../../Hooks/useAuth";
 import toast from "react-hot-toast";
 
@@ -12,8 +12,24 @@ const Navbar = () => {
         <NavLink to={"/"}>Home</NavLink>
       </li>
       <li>
+        <NavLink to={"/pricing"}>Pricing</NavLink>
+      </li>
+      <li>
+        <NavLink to={"/rider"}>Be a Rider</NavLink>
+      </li>
+      <li>
         <NavLink to={"/coverage"}>Coverage</NavLink>
       </li>
+      {user && (
+        <>
+          <li>
+            <NavLink to={"/dashboard/my-parcels"}>My Parcels</NavLink>
+          </li>
+          <li>
+            <NavLink to={"/dashboard"}>Dashboard</NavLink>
+          </li>
+        </>
+      )}
       <li>
         <NavLink to={"/aboutUs"}>About Us</NavLink>
       </li>

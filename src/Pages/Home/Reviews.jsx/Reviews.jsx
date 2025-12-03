@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Autoplay, EffectCoverflow, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ReviewCard from "./ReviewCard";
@@ -24,7 +24,6 @@ const Reviews = () => {
       </div>
 
       <Swiper
-        loop={true}
         effect={"coverflow"}
         grabCursor={true}
         centeredSlides={true}

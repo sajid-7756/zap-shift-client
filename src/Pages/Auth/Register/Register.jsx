@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { Link, useLocation, useNavigate } from "react-router";
 import SocialLogin from "../Social login/SocialLogin";
 import axios from "axios";
+import useAxiosSecure from "../../../Hooks/useAxiosSecure";
 
 const Register = () => {
   const { registerUser, updateUserProfile } = useAuth();
@@ -14,22 +15,20 @@ const Register = () => {
   } = useForm();
   const location = useLocation();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
   const handleRegister = (data) => {
     console.log("after register", data);
 
-    const profileImg = data.photo[0];
+    const profileImg = data.photo[0]; //1. Get file from form
+    console.log(profileImg);
 
     registerUser(data.email, data.password)
-      .then((res) => {
-        console.log(res.user);
-
-        //1. store the image in form data
+      .then(() => {
         const formData = new FormData();
-        formData.append("image", profileImg);
+        formData.append("image", profileImg); // 2. store image in formdata
 
-        //2. post it in imagebb
-        axios
+        axios //3.post this to imagebb
           .post(
             `https://api.imgbb.com/1/upload?key=${
               import.meta.env.VITE_IMAGE_HOST_KEY
@@ -37,20 +36,34 @@ const Register = () => {
             formData
           )
           .then((res) => {
-            console.log("after image upload", res.data.data.url);
-            //3. store it to an object
-            const userProfile = {
-              displayName: data.name,
-              photoURL: res.data.data.url,
+            const photoURL = res.data.data.url;
+
+            //create user in db
+            const userInfo = {
+              name: data.name,
+              email: data.email,
+              photoURL,
             };
-            //4.update profile with using updateUserProfile function
-            updateUserProfile(userProfile)
+
+            axiosSecure.post("/users", userInfo).then((res) => {
+              // console.log(res.data)
+              if (res.data.insertedId) {
+                console.log("user added in db");
+              }
+            });
+
+            const updatedData = {
+              //4. store in a object
+              displayName: data.name,
+              photoURL,
+            };
+
+            updateUserProfile(updatedData) //5.update profile with data
               .then(() => {
-                console.log("User profile updated");
+                console.log("Profile updated");
               })
-              .catch((err) => toast.error(err.message));
-          })
-          .catch((err) => console.log(err));
+              .catch((err) => console.log(err));
+          });
 
         toast.success("Register success");
         navigate(location?.state || "/");
@@ -87,7 +100,7 @@ const Register = () => {
             {/* Image */}
             <div>
               <label className="label">
-                <span className="label-text">Name</span>
+                <span className="label-text">Photo</span>
               </label>
               <input
                 {...register("photo", {

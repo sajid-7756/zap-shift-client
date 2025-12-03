@@ -15,6 +15,7 @@ const Brands = () => {
     amazon,
     amazon_vector,
     casio,
+    randstad,
     moonstar,
     randstad,
     star,

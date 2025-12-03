@@ -1,13 +1,12 @@
-import { Circle, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 
 const Coverage = () => {
-  // const serviceCenter = useLoaderData();
+  const position = [23.685, 90.3563];
   const [serviceCenters, setServiceCenters] = useState([]);
   const mapRef = useRef(null);
-  const position = [23.685, 90.3563];
 
   useEffect(() => {
     axios("/public/service-center.json").then((data) => {
@@ -32,7 +31,7 @@ const Coverage = () => {
   };
 
   return (
-    <div className="my-10 space-y-7">
+    <div className="my-10 space-y-7 p-8 ">
       <h1 className="text-5xl font-bold text-secondary">
         We are available in 64 districts
       </h1>
